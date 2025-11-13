@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: p2p-app
+  name: php-app
 spec:
   template:
     spec:
