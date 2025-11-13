@@ -27,9 +27,9 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/OlegGerasymenko/project1
+    repoURL: https://github.com/OlegGerasymenko/local_argocd.git
     targetRevision: HEAD
-    path: local_argocd/k8s
+    path: k8s
 
   destination:
     server: https://kubernetes.default.svc

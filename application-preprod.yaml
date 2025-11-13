@@ -7,9 +7,9 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/OlegGerasymenko/project1
+    repoURL: https://github.com/OlegGerasymenko/local_argocd.git
     targetRevision: HEAD
-    path: local_argocd/k8s/overlays/preprod
+    path: k8s/overlays/preprod
 
   destination:
     server: https://kubernetes.default.svc
