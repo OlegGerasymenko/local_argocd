@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: php-app
+  namespace: php-app
+  labels:
+    app: php-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: php-app
+  template:
+    metadata:
+      labels:
+        app: php-app
+    spec:
+      initContainers:
+        - name: init-data
+          image: php-app:latest
+          imagePullPolicy: Never
+          command: ['sh', '-c']
+          args:
+            - |
+              echo "Initializing data volume...";
+              if [ ! -f /mnt/shared/config/test.txt ]; then
+                mkdir -p /mnt/shared/config;
+                cp /var/www/html/source/test.txt /mnt/shared/config/test.txt;
+                chmod 666 /mnt/shared/config/test.txt;
+                echo "Initialization complete!";
+              else
+                echo "test.txt already exists, skipping initialization.";
+              fi
+          volumeMounts:
+            - name: data-volume
+              mountPath: /mnt/shared
+              subPath: p2p6
+      containers:
+        - name: php-app
+          image: php-app:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+              name: http
+          volumeMounts:
+            - name: data-volume
+              mountPath: /var/www/html/config/test.txt
+              subPath: p2p6/config/test.txt
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+            limits:
+              memory: "128Mi"
+              cpu: "200m"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+      volumes:
+        - name: data-volume
+          persistentVolumeClaim:
+            claimName: php-app-pvc

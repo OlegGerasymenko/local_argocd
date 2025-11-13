@@ -1,0 +1,52 @@
+# DEPRECATED: This application has been replaced with environment-specific apps
+# 
+# New applications:
+#   - application-dev1.yaml    (php-app-dev1)
+#   - application-dev2.yaml    (php-app-dev2)
+#   - application-preprod.yaml (php-app-preprod)
+#
+# To deploy all new applications, run:
+#   ./deploy-all-apps.sh
+#
+# Or individually:
+#   kubectl apply -f local_argocd/application-dev1.yaml
+#   kubectl apply -f local_argocd/application-dev2.yaml
+#   kubectl apply -f local_argocd/application-preprod.yaml
+#
+# To remove this old application:
+#   kubectl delete application php-app -n argocd
+#
+# See KUSTOMIZE_MIGRATION_GUIDE.md for full details.
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: php-app
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/OlegGerasymenko/project1
+    targetRevision: HEAD
+    path: local_argocd/k8s
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: php-app
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+
