@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: php-app
+  namespace: php-app-dev2
 spec:
   template:
     spec:
