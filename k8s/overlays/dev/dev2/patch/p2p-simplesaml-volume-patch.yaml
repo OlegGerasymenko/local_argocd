@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: p2p-app
+spec:
+  template:
+    spec:
+      initContainers:
+        - name: init-data
+          volumeMounts:
+            - name: data-volume
+              mountPath: /mnt/shared
+              subPath: dev2
+      containers:
+        - name: php-app
+          volumeMounts:
+            - name: data-volume
+              mountPath: /var/www/html/config/test.txt
+              subPath: dev2/config/test.txt

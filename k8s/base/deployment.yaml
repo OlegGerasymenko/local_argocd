@@ -31,10 +31,6 @@ spec:
               else
                 echo "test.txt already exists, skipping initialization.";
               fi
-          volumeMounts:
-            - name: data-volume
-              mountPath: /mnt/shared
-              subPath: p2p6
       containers:
         - name: php-app
           image: php-app:latest
@@ -42,10 +38,6 @@ spec:
           ports:
             - containerPort: 80
               name: http
-          volumeMounts:
-            - name: data-volume
-              mountPath: /var/www/html/config/test.txt
-              subPath: p2p6/config/test.txt
           resources:
             requests:
               memory: "64Mi"
